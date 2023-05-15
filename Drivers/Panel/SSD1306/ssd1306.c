@@ -164,20 +164,19 @@ void ssd1306_Init(void) {
     SSD1306_Buffer[ ( ( x / 8 ) ) +  ( y * 32 )  ] |= 1 << (x % 8);
 #endif
 
-#if 1
+#if 0
     ssd1306_DrawPixel(0, 0, White );
-    ssd1306_DrawPixel(255, 0, White );
-    ssd1306_DrawPixel(0, 63, White );
-    ssd1306_DrawPixel(255, 63, White );
+    ssd1306_DrawPixel(1, 1, White );
+    ssd1306_DrawPixel(2, 2, White );
+    ssd1306_DrawPixel(3, 3, White );
 #endif
+//    ssd1306_Line(0,0,255,64,White);
 
     ssd1306_UpdateScreen();
 
-    ssd1306_TestLine();
-
     // ssd1306_TestFonts1();
 
-    while(1);
+//    while(1);
 
     // Set default values for screen object
     SSD1306.CurrentX = 0;
@@ -201,11 +200,11 @@ void convertByte(uint8_t inputByte, uint8_t *outputBytes )
     int inputBitIndex, outputByteIndex;
 
     outputByteIndex = 0;
-    inputBitIndex = BITS_PER_BYTE - 1;
+    inputBitIndex = 0;
 
     uint8_t cnt = 0;
 
-    while (inputBitIndex >= 0) {
+    while (inputBitIndex <= 7) {
 
         // Get the current bit value from the input byte
         uint8_t bitValue = (inputByte >> inputBitIndex) & 0x01;
@@ -235,7 +234,7 @@ void convertByte(uint8_t inputByte, uint8_t *outputBytes )
         }
 
         // Move to the next input bit
-        inputBitIndex--;
+        inputBitIndex++;
     }
 }
 

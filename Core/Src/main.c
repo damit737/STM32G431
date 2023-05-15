@@ -97,6 +97,7 @@ int main(void)
 //				CS_GPIO_Port, CS_Pin,
 //				DCX_GPIO_Port, DCX_Pin );
   ssd1306_Init();
+  ssd1306_TestLine();
   /* USER CODE END 2 */
 
   /* Infinite loop */
