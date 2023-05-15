@@ -142,12 +142,42 @@ void ssd1306_Init(void) {
     // Clear screen
     memset(SSD1306_Buffer,0,sizeof(SSD1306_Buffer));
 
-//    ssd1306_Fill(White);
+#if 0
+    // Upper left corner (0,0)
+    uint16_t x = 0;
+    uint16_t y = 0;
+    SSD1306_Buffer[ ( x / 8 ) + ( y * 32 ) ] |= 1 << (x % 8);
 
-    ssd1306_DrawPixel(0,0,White);
-    ssd1306_DrawPixel(1,0,White);
-    // Flush buffer to screen
+    // Upper right corner (256,0)
+    x = 255;
+    y = 0;
+    SSD1306_Buffer[ ( x / 8 ) + ( y * 32 ) ] |= 1 << (x % 8);
+
+    // Lower left corner
+    x = 0;
+    y = 63;
+    SSD1306_Buffer[ ( ( x / 8 ) ) +  ( y * 32 )  ] |= 1 << (x % 8);
+
+    // Lower right corner
+    x = 255;
+    y = 63;
+    SSD1306_Buffer[ ( ( x / 8 ) ) +  ( y * 32 )  ] |= 1 << (x % 8);
+#endif
+
+#if 1
+    ssd1306_DrawPixel(0, 0, White );
+    ssd1306_DrawPixel(255, 0, White );
+    ssd1306_DrawPixel(0, 63, White );
+    ssd1306_DrawPixel(255, 63, White );
+#endif
+
     ssd1306_UpdateScreen();
+
+    ssd1306_TestLine();
+
+    // ssd1306_TestFonts1();
+
+    while(1);
 
     // Set default values for screen object
     SSD1306.CurrentX = 0;
@@ -189,7 +219,11 @@ void convertByte(uint8_t inputByte, uint8_t *outputBytes )
             outputBytes[outputByteIndex] |= 0x0F;
         }
         else{
-        	outputBytes[outputByteIndex] = 0x00;
+
+            if(cnt == 0)
+              outputBytes[outputByteIndex] &= ~(0xF0);
+            else if(cnt ==1)
+              outputBytes[outputByteIndex] &= ~(0x0F);
         }
 
         cnt ++;
@@ -219,11 +253,12 @@ void ssd1306_UpdateScreen(void) {
 	ssd1306_WriteCommand(0x75);
 	ssd1306_WriteCommand(0x00);
 	ssd1306_WriteCommand(0x3F);
+
 	for( uint16_t i = 0; i < sizeof(SSD1306_Buffer); ++i ) {
 
-	convertByte( SSD1306_Buffer[i], outputBytes );
+		convertByte( SSD1306_Buffer[i], outputBytes );
 
-	ssd1306_WriteData( outputBytes, sizeof(outputBytes));
+		ssd1306_WriteData( outputBytes, sizeof(outputBytes));
 	}
 }
 
@@ -241,9 +276,14 @@ void ssd1306_DrawPixel(uint8_t x, uint8_t y, SSD1306_COLOR color) {
    
     // Draw in the right color
     if(color == White) {
-        SSD1306_Buffer[x + (y / 8) * SSD1306_WIDTH] |= 1 << (y % 8);
+
+        // SSD1306_Buffer[x + (y / 8) * SSD1306_WIDTH] |= 1 << (y % 8);
+        SSD1306_Buffer[ ( ( x / 8 ) ) +  ( y * 32 )  ] |= 1 << (x % 8);
+
     } else { 
-        SSD1306_Buffer[x + (y / 8) * SSD1306_WIDTH] &= ~(1 << (y % 8));
+
+    	// SSD1306_Buffer[x + (y / 8) * SSD1306_WIDTH] &= ~(1 << (y % 8));
+        SSD1306_Buffer[ ( ( x / 8 ) ) +  ( y * 32 )  ] &= ~ (1 << (x % 8));
     }
 }
 
