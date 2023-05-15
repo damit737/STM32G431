@@ -112,7 +112,7 @@ extern SPI_HandleTypeDef SSD1306_SPI_PORT;
 #endif
 
 #ifndef SSD1306_BUFFER_SIZE
-#define SSD1306_BUFFER_SIZE   SSD1306_WIDTH * SSD1306_HEIGHT
+#define SSD1306_BUFFER_SIZE   SSD1306_WIDTH * SSD1306_HEIGHT / 8
 #endif
 
 // Enumeration for screen colors
@@ -139,9 +139,13 @@ typedef struct {
     uint8_t y;
 } SSD1306_VERTEX;
 
+#define BITS_PER_BYTE 8
+#define BITS_PER_OUTPUT_BYTE 2
+
 // Procedure definitions
 void ssd1306_Init(void);
 void ssd1306_Fill(SSD1306_COLOR color);
+void convertByte(uint8_t inputByte, uint8_t *outputBytes );
 void ssd1306_UpdateScreen(void);
 void ssd1306_DrawPixel(uint8_t x, uint8_t y, SSD1306_COLOR color);
 char ssd1306_WriteChar(char ch, FontDef Font, SSD1306_COLOR color);

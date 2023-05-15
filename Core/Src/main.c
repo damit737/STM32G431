@@ -24,6 +24,8 @@
 /* USER CODE BEGIN Includes */
 //#include "SSD1309.h"
 #include <../Drivers/Panel/SSD1306/ssd1306.h>
+#include <../Drivers/Panel/SSD1306/ssd1306_tests.h>
+#include <../Drivers/Panel/SSD1306/ssd1306_fonts.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
