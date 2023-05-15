@@ -92,12 +92,8 @@ int main(void)
   MX_GPIO_Init();
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
-//  SSD1309_Init( &hspi1,
-//		  	  	RST_GPIO_Port, RST_Pin,
-//				CS_GPIO_Port, CS_Pin,
-//				DCX_GPIO_Port, DCX_Pin );
-  ssd1306_Init();
-  ssd1306_TestLine();
+//  ssd1306_Init();
+  ssd1306_TestAll();
   /* USER CODE END 2 */
 
   /* Infinite loop */

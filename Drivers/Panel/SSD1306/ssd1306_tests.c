@@ -114,14 +114,14 @@ void ssd1306_TestBorder() {
    
     uint32_t start = HAL_GetTick();
     uint32_t end = start;
-    uint8_t x = 0;
+    uint16_t x = 0;
     uint8_t y = 0;
     do {
         ssd1306_DrawPixel(x, y, Black);
 
-        if((y == 0) && (x < 127))
+        if((y == 0) && (x < SSD1306_WIDTH))
             x++;
-        else if((x == 127) && (y < (SSD1306_HEIGHT-1)))
+        else if((x == SSD1306_WIDTH) && (y < (SSD1306_HEIGHT-1)))
             y++;
         else if((y == (SSD1306_HEIGHT-1)) && (x > 0)) 
             x--;
@@ -133,7 +133,7 @@ void ssd1306_TestBorder() {
     
         HAL_Delay(5);
         end = HAL_GetTick();
-    } while((end - start) < 8000);
+    } while((end - start) < 20000);
    
     HAL_Delay(1000);
 }
