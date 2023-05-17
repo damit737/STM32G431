@@ -93,7 +93,10 @@ int main(void)
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
   ssd1306_Init();
+
   ssd1306_TestFonts1();
+
+  ssd1306_TestDrawBitmap();
   /* USER CODE END 2 */
 
   /* Infinite loop */
