@@ -92,8 +92,8 @@ int main(void)
   MX_GPIO_Init();
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
-//  ssd1306_Init();
-  ssd1306_TestAll();
+  ssd1306_Init();
+  ssd1306_TestFonts1();
   /* USER CODE END 2 */
 
   /* Infinite loop */

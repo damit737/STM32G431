@@ -309,7 +309,7 @@ char ssd1306_WriteChar(char ch, FontDef Font, SSD1306_COLOR color) {
     
     // Use the font to write
     for(i = 0; i < Font.FontHeight; i++) {
-        b = Font.data[(ch - 32) * Font.FontHeight + i];
+        b = Font.data[(ch - 33) * Font.FontHeight + i];
         for(j = 0; j < Font.FontWidth; j++) {
             if((b << j) & 0x8000)  {
                 ssd1306_DrawPixel(SSD1306.CurrentX + j, (SSD1306.CurrentY + i), (SSD1306_COLOR) color);
