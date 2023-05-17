@@ -293,6 +293,7 @@ void ssd1306_DrawPixel(uint8_t x, uint8_t y, SSD1306_COLOR color) {
  * color    => Black or White
  */
 char ssd1306_WriteChar(char ch, FontDef Font, SSD1306_COLOR color) {
+
     uint32_t i, b, j;
     
     // Check if character is valid
@@ -309,7 +310,9 @@ char ssd1306_WriteChar(char ch, FontDef Font, SSD1306_COLOR color) {
     
     // Use the font to write
     for(i = 0; i < Font.FontHeight; i++) {
+
         b = Font.data[(ch - 33) * Font.FontHeight + i];
+
         for(j = 0; j < Font.FontWidth; j++) {
             if((b << j) & 0x8000)  {
                 ssd1306_DrawPixel(SSD1306.CurrentX + j, (SSD1306.CurrentY + i), (SSD1306_COLOR) color);
@@ -326,18 +329,100 @@ char ssd1306_WriteChar(char ch, FontDef Font, SSD1306_COLOR color) {
     return ch;
 }
 
+/*
+ * Draw 1 char to the screen buffer
+ * ch       => char om weg te schrijven
+ * Font     => Font waarmee we gaan schrijven
+ * color    => Black or White
+ */
+char ssd1306_WriteChar_DotFactory(char ch, DotFactoryDef Font, SSD1306_COLOR color) {
+
+    uint32_t i, b, j;
+
+    // Check if character is valid
+    if (ch < 32 || ch > 126)
+        return 0;
+
+    // Check remaining space on current line
+    if (SSD1306_WIDTH < (SSD1306.CurrentX + Font.FontWidth) ||
+        SSD1306_HEIGHT < (SSD1306.CurrentY + Font.FontHeight))
+    {
+        // Not enough space on current line
+        return 0;
+    }
+
+    uint16_t width_ByteIndex = (Font.FontWidth + 7) / 8;
+    uint16_t height = Font.FontHeight;
+    uint8_t bitShift = 0;
+
+    uint8_t *pCharData = &Font.data[ ( ch - 33 ) * height * width_ByteIndex ];
+
+    // Use the font to write
+    for( i = 0; i < height; i++ ) {
+
+      for( j = 0; j < width_ByteIndex; j++ ) {
+
+        while( bitShift < 8 ) {
+
+          if( ( *pCharData << bitShift ) & 0x80 ) {
+
+              ssd1306_DrawPixel( SSD1306.CurrentX + (j * 8 ) + bitShift,
+                                (SSD1306.CurrentY + i),
+                                (SSD1306_COLOR) color);
+          }
+          else {
+
+              ssd1306_DrawPixel( SSD1306.CurrentX + (j * 8 ) + bitShift,
+                                 (SSD1306.CurrentY + i),
+                                 (SSD1306_COLOR)!color );
+          }
+
+          bitShift ++;
+        }
+
+        bitShift = 0;
+        pCharData++;
+      }
+    }
+
+    // The current space is now taken
+    SSD1306.CurrentX += Font.FontWidth;
+
+    // Return written char for validation
+    return ch;
+}
+
+
+/* Write full string to screenbuffer */
+char ssd1306_WriteString_DotFactory(char* str, DotFactoryDef Font, SSD1306_COLOR color) {
+
+  while (*str) {
+
+    if (ssd1306_WriteChar_DotFactory(*str, Font, color) != *str) {
+        // Char could not be written
+        return *str;
+    }
+    str++;
+  }
+
+  // Everything ok
+  return *str;
+}
+
 /* Write full string to screenbuffer */
 char ssd1306_WriteString(char* str, FontDef Font, SSD1306_COLOR color) {
-    while (*str) {
-        if (ssd1306_WriteChar(*str, Font, color) != *str) {
-            // Char could not be written
-            return *str;
-        }
-        str++;
+
+  while (*str) {
+
+    if (ssd1306_WriteChar(*str, Font, color) != *str) {
+        // Char could not be written
+        return *str;
     }
-    
-    // Everything ok
-    return *str;
+    str++;
+  }
+
+  // Everything ok
+  return *str;
 }
 
 /* Position the cursor */
