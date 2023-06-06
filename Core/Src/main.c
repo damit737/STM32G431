@@ -30,7 +30,8 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-
+extern uint8_t pucByte;
+extern uint16_t index;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -39,8 +40,8 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-uint8_t data[5] = {0};
-extern uint8_t pucByte;
+//char data[2]  = {0};
+//uint8_t pucByte;
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -97,19 +98,21 @@ int main(void)
   MX_SPI1_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-  for(int x ; x < 5 ; x++)
-  {
-	  data[x] = x;
-  }
+//  for(int x ; x < 5 ; x++)
+//  {
+//	  data[x] = x;
+//  }
+//  data[0] = 'A';
+//  data[1] = 'T';
   HAL_UART_Receive_IT(&huart1, &pucByte, 1);
+//
+//  HAL_UART_Transmit_IT(&huart1, (uint8_t *)&data[0], sizeof(data));
 
-  HAL_UART_Transmit_IT(&huart1, &data[0], sizeof(data));
-
-  ssd1306_Init();
-
-  ssd1306_TestFonts1();
-
-  ssd1306_TestDrawBitmap();
+//  ssd1306_Init();
+//
+//  ssd1306_TestFonts1();
+//
+//  ssd1306_TestDrawBitmap();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -259,7 +262,8 @@ static void MX_USART1_UART_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN USART1_Init 2 */
-  __HAL_UART_ENABLE_IT( &huart1, UART_IT_ERR );
+  __HAL_UART_FLUSH_DRREGISTER(&huart1);
+//  __HAL_UART_ENABLE_IT( &huart1, UART_IT_IDLE );
   /* USER CODE END USART1_Init 2 */
 
 }
@@ -315,7 +319,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     HAL_IncTick();
   }
   /* USER CODE BEGIN Callback 1 */
-
   /* USER CODE END Callback 1 */
 }
 
