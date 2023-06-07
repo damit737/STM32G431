@@ -26,12 +26,14 @@
 #include <../Drivers/Panel/SSD1306/ssd1306.h>
 #include <../Drivers/Panel/SSD1306/ssd1306_tests.h>
 #include <../Drivers/Panel/SSD1306/ssd1306_fonts.h>
+#include <string.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 extern uint8_t pucByte;
-extern uint16_t index;
+extern uint16_t BLE_index;
+extern int ReceiveCompleteFlag;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -108,9 +110,11 @@ int main(void)
 //
 //  HAL_UART_Transmit_IT(&huart1, (uint8_t *)&data[0], sizeof(data));
 
-//  ssd1306_Init();
+  ssd1306_Init();
+
+  HAL_Delay(1000);
 //
-//  ssd1306_TestFonts1();
+  ssd1306_TestFonts1();
 //
 //  ssd1306_TestDrawBitmap();
   /* USER CODE END 2 */
@@ -122,6 +126,14 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	  if(ReceiveCompleteFlag == 1)
+	  {
+		  ssd1306_TestFonts(&data[0]);
+		  ReceiveCompleteFlag = 0;
+		  memset(data, 0, 256);
+		  BLE_index = 0;
+	  }
+
   }
   /* USER CODE END 3 */
 }

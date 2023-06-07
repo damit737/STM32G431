@@ -5287,6 +5287,17 @@ void ssd1306_TestBorder() {
     HAL_Delay(1000);
 }
 
+void ssd1306_TestFonts(uint8_t* buf) {
+
+	ssd1306_Fill(Black);
+
+	ssd1306_SetCursor(0, 0);
+
+	ssd1306_WriteString_DotFactory( (char*)buf, calibri_8pt, White );
+
+	ssd1306_UpdateScreen();
+}
+
 void ssd1306_TestFonts1() {
 
   ssd1306_SetCursor(0, 0);

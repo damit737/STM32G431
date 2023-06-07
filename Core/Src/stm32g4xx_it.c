@@ -28,8 +28,8 @@
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN TD */
 uint8_t pucByte;
-uint8_t data[ 256 ];
-uint16_t index;
+uint16_t BLE_index;
+int ReceiveCompleteFlag = 0;
 /* USER CODE END TD */
 
 /* Private define ------------------------------------------------------------*/
@@ -234,13 +234,20 @@ void TIM7_IRQHandler(void)
 /* USER CODE BEGIN 1 */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle)
 {
-	data[index] = pucByte;
-	if(index>=256)
-		index = 0;
-	if(data[index] == '\n')
-		index = 0;
+	data[BLE_index] = pucByte;
+	if(BLE_index>=256)
+		BLE_index = 0;
+	if(data[BLE_index] == '\n')
+	{
+		BLE_index = 0;
+		ReceiveCompleteFlag = 1;
+	}
 	else
-		index++;
+	{
+		BLE_index++;
+		ReceiveCompleteFlag = 0;
+	}
+
 }
 /* USER CODE END 1 */
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

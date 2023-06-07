@@ -42,6 +42,7 @@ extern "C" {
 
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
+uint8_t data[ 256 ];
 
 /* USER CODE END EC */
 
