@@ -235,9 +235,12 @@ void TIM7_IRQHandler(void)
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle)
 {
 	data[index] = pucByte;
-	index++;
 	if(index>=256)
 		index = 0;
+	if(data[index] == '\n')
+		index = 0;
+	else
+		index++;
 }
 /* USER CODE END 1 */
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
