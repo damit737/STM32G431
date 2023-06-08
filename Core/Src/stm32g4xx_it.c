@@ -249,5 +249,11 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle)
 	}
 
 }
+
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *UartHandle)
+{
+//	HAL_UART_Receive_IT( &huart1, &pucByte, 1 );
+}
+
 /* USER CODE END 1 */
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

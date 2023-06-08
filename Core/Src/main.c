@@ -104,11 +104,15 @@ int main(void)
 //  {
 //	  data[x] = x;
 //  }
-//  data[0] = 'A';
-//  data[1] = 'T';
+  data[0] = 'A';
+  data[1] = 'T';
+  data[2] = 'A';
   HAL_UART_Receive_IT(&huart1, &pucByte, 1);
-//
-//  HAL_UART_Transmit_IT(&huart1, (uint8_t *)&data[0], sizeof(data));
+  HAL_Delay(100);
+  HAL_UART_Transmit(&huart1, (uint8_t *)&data[0], 3, 100);
+  HAL_UART_Receive_IT(&huart1, &pucByte, 1);
+
+  memset(data, 0, 256);
 
   ssd1306_Init();
 
@@ -130,6 +134,8 @@ int main(void)
 	  {
 		  ssd1306_TestFonts(&data[0]);
 		  ReceiveCompleteFlag = 0;
+		  HAL_Delay(100);
+		  HAL_UART_Transmit(&huart1, (uint8_t *)&data[0], sizeof(data), 100);
 		  memset(data, 0, 256);
 		  BLE_index = 0;
 	  }
