@@ -100,19 +100,7 @@ int main(void)
   MX_SPI1_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-//  for(int x ; x < 5 ; x++)
-//  {
-//	  data[x] = x;
-//  }
-  data[0] = 'A';
-  data[1] = 'T';
-  data[2] = 'A';
   HAL_UART_Receive_IT(&huart1, &pucByte, 1);
-  HAL_Delay(100);
-  HAL_UART_Transmit(&huart1, (uint8_t *)&data[0], 3, 100);
-  HAL_UART_Receive_IT(&huart1, &pucByte, 1);
-
-  memset(data, 0, 256);
 
   ssd1306_Init();
 
@@ -134,8 +122,6 @@ int main(void)
 	  {
 		  ssd1306_TestFonts(&data[0]);
 		  ReceiveCompleteFlag = 0;
-		  HAL_Delay(100);
-		  HAL_UART_Transmit(&huart1, (uint8_t *)&data[0], sizeof(data), 100);
 		  memset(data, 0, 256);
 		  BLE_index = 0;
 	  }
@@ -296,9 +282,9 @@ static void MX_GPIO_Init(void)
   GPIO_InitTypeDef GPIO_InitStruct = {0};
 
   /* GPIO Ports Clock Enable */
+  __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOF_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
-  __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
@@ -307,6 +293,12 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, DCX_Pin|CS_Pin, GPIO_PIN_SET);
 
+  /*Configure GPIO pin : Button_Pin */
+  GPIO_InitStruct.Pin = Button_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(Button_GPIO_Port, &GPIO_InitStruct);
+
   /*Configure GPIO pins : RST_Pin DCX_Pin CS_Pin */
   GPIO_InitStruct.Pin = RST_Pin|DCX_Pin|CS_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
@@ -314,10 +306,21 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
+
 }
 
 /* USER CODE BEGIN 4 */
-
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+	data[0] = 'I';
+	data[1] = 'N';
+	data[2] = 'T';
+	HAL_UART_Transmit(&huart1, (uint8_t *)&data[0], 3, 100);
+	HAL_UART_Receive_IT(&huart1, &pucByte, 1);
+}
 /* USER CODE END 4 */
 
  /**

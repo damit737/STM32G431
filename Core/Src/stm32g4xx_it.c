@@ -218,6 +218,20 @@ void USART1_IRQHandler(void)
 }
 
 /**
+  * @brief This function handles EXTI line[15:10] interrupts.
+  */
+void EXTI15_10_IRQHandler(void)
+{
+  /* USER CODE BEGIN EXTI15_10_IRQn 0 */
+
+  /* USER CODE END EXTI15_10_IRQn 0 */
+  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_13);
+  /* USER CODE BEGIN EXTI15_10_IRQn 1 */
+
+  /* USER CODE END EXTI15_10_IRQn 1 */
+}
+
+/**
   * @brief This function handles TIM7 global interrupt.
   */
 void TIM7_IRQHandler(void)
@@ -248,11 +262,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *UartHandle)
 		ReceiveCompleteFlag = 0;
 	}
 
-}
-
-void HAL_UART_TxCpltCallback(UART_HandleTypeDef *UartHandle)
-{
-//	HAL_UART_Receive_IT( &huart1, &pucByte, 1 );
 }
 
 /* USER CODE END 1 */
